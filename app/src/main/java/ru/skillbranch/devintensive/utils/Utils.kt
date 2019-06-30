@@ -19,4 +19,10 @@ object Utils {
         val lastName = parts?.getOrNull(1)
         return firstName to lastName
     }
+
+    fun toInitials(fullName: String?, lastName: String? = null): String? {
+        val firstLetter = fullName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
+        val lastLetter = lastName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
+        return "$firstLetter$lastLetter".takeIf { it.isNotBlank() }
+    }
 }

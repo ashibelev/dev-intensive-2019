@@ -30,4 +30,17 @@ class ExampleUnitTest {
         println(Utils.parseFullName(" "))
         println(Utils.parseFullName("John"))
     }
+
+    @Test
+    fun createMessage() {
+    }
+
+    @Test
+    fun toInitialsTest() {
+        println(Utils.toInitials("john", "doe"))
+        println(Utils.toInitials("John", null))
+        println(Utils.toInitials(null, null))
+        println(Utils.toInitials(" ", ""))
+        println(Utils.toInitials(null, "doe"))
+    }
 }
