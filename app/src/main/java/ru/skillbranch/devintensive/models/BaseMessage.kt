@@ -34,11 +34,11 @@ abstract class BaseMessage(
             chat: Chat,
             date: Date,
             @Type type: String,
-            payload: String?,
+            payload: Any?,
             isIncoming: Boolean = false
         ): BaseMessage = when (type) {
-            TYPE_TEXT -> TextMessage("${++lastMessageId}", from, chat, isIncoming, date, payload)
-            TYPE_IMAGE -> ImageMessage("${++lastMessageId}", from, chat, isIncoming, date, payload)
+            TYPE_TEXT -> TextMessage("${++lastMessageId}", from, chat, isIncoming, date, payload as String)
+            TYPE_IMAGE -> ImageMessage("${++lastMessageId}", from, chat, isIncoming, date, payload as String)
             else -> throw IllegalArgumentException("Unknown message type: $type")
         }
     }

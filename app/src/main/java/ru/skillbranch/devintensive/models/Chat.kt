@@ -5,5 +5,9 @@ package ru.skillbranch.devintensive.models
  *
  * @author Alexandr Shibelev (av.shibelev@gmail.com)
  */
-class Chat {
+class Chat(
+    val id: String,
+    val members: MutableList<User> = mutableListOf(),
+    val messages: MutableList<BaseMessage> = mutableListOf()
+) {
 }

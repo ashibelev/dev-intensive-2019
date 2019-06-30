@@ -25,4 +25,8 @@ object Utils {
         val lastLetter = lastName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
         return "$firstLetter$lastLetter".takeIf { it.isNotBlank() }
     }
+
+    fun transliteration(payload: String, divider: String = " "): String {
+        return ""
+    }
 }
