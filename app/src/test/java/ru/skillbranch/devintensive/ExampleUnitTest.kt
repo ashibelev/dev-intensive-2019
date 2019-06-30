@@ -43,4 +43,10 @@ class ExampleUnitTest {
         println(Utils.toInitials(" ", ""))
         println(Utils.toInitials(null, "doe"))
     }
+
+    @Test
+    fun transliterationTest() {
+        println(Utils.transliteration("Женя Стереотипов "))
+        println(Utils.transliteration("Amazing Петр ","_"))
+    }
 }
