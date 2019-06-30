@@ -14,7 +14,7 @@ class TextMessage(
     chat: Chat,
     isIncoming: Boolean = false,
     date: Date = Date(),
-    val text: String?
+    var text: String?
 ) : BaseMessage(id, from, chat, isIncoming, date) {
 
     override fun formatMessage() = "id: $id ${from?.firstName}" +
