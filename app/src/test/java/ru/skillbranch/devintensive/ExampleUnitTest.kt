@@ -102,4 +102,18 @@ class ExampleUnitTest {
         println(Date().add(-400, TimeUnits.DAY).humanizeDiff())
         println(Date().add(400, TimeUnits.DAY).humanizeDiff())
     }
+
+    @Test
+    fun userBuilderTest() {
+        val user = User.Builder().id("1")
+            .firstName("John")
+            .lastName("Doe")
+            .avatar("")
+            .rating(1)
+            .respect(1)
+            .lastVisit(Date())
+            .isOnline(false)
+            .build()
+        println(user)
+    }
 }
