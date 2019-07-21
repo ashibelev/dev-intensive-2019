@@ -5,6 +5,8 @@ import org.junit.Test
 import ru.skillbranch.devintensive.extensions.TimeUnits
 import ru.skillbranch.devintensive.extensions.add
 import ru.skillbranch.devintensive.extensions.humanizeDiff
+import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
@@ -96,7 +98,7 @@ class ExampleUnitTest {
 
         println(" --- ")
         println(Date().add(-2, TimeUnits.HOUR).humanizeDiff())
-        println(Date().add(-5, TimeUnits.DAY).humanizeDiff())
+        println(Date().add(5, TimeUnits.DAY).humanizeDiff())
         println(Date().add(2, TimeUnits.MINUTE).humanizeDiff())
         println(Date().add(7, TimeUnits.DAY).humanizeDiff())
         println(Date().add(-400, TimeUnits.DAY).humanizeDiff())
@@ -115,5 +117,15 @@ class ExampleUnitTest {
             .isOnline(false)
             .build()
         println(user)
+    }
+
+    @Test
+    fun test_abstract_factory() {
+        val user = User.makeUser("Тавторкин Александр")
+        val textMessage = BaseMessage.makeMessage(user, Chat("0"),payload = "any text message", type = "text", date = Date().add(4, TimeUnits.DAY).add(1))
+        val imageMessage = BaseMessage.makeMessage(user, Chat("0"),payload = "https://anyurl.com", type = "image", date = Date().add(1, TimeUnits.MINUTE))
+
+        println(textMessage.formatMessage())
+        println(imageMessage.formatMessage())
     }
 }
