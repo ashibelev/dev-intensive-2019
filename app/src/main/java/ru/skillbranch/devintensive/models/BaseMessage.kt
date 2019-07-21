@@ -1,6 +1,6 @@
 package ru.skillbranch.devintensive.models
 
-import android.support.annotation.StringDef
+import androidx.annotation.StringDef
 import java.util.*
 
 /**
