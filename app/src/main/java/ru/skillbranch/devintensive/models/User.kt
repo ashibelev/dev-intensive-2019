@@ -3,12 +3,7 @@ package ru.skillbranch.devintensive.models
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
-/**
- * Created on 2019-06-29.
- *
- * @author Alexandr Shibelev (av.shibelev@gmail.com)
- */
-data class User(
+data class User (
     val id: String,
     var firstName: String?,
     var lastName: String?,
@@ -19,21 +14,34 @@ data class User(
     var isOnline: Boolean = false
 ) {
 
-    constructor(id: String, firstName: String?, lastName: String?) : this(id, firstName, lastName, null)
+    constructor(id: String, firstName: String?, lastName: String?) : this(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        avatar = null
+    )
 
     private constructor(builder: Builder) : this(
-        builder.id, builder.firstName, builder.lastName, builder.avatar,
-        builder.rating, builder.respect, builder.lastVisit, builder.isOnline
+        builder.id,
+        builder.firstName,
+        builder.lastName,
+        builder.avatar,
+        builder.rating,
+        builder.respect,
+        builder.lastVisit,
+        builder.isOnline
     )
 
     companion object Factory {
-
         private var lastId: Int = -1
+        fun makeUser(fullName: String?): User {
+            lastId++
 
-        fun makeUser(fullName: String): User {
             val (firstName, lastName) = Utils.parseFullName(fullName)
-            return User("${++lastId}", firstName, lastName)
+
+            return User(id = "$lastId", firstName = firstName, lastName = lastName)
         }
+
     }
 
     class Builder {
@@ -49,20 +57,20 @@ data class User(
             private set
         var respect: Int = 0
             private set
-        var lastVisit: Date? = Date()
+        var lastVisit: Date = Date()
             private set
         var isOnline: Boolean = false
             private set
 
-        fun id(id: String): Builder = apply { this.id = id }
-        fun firstName(firstName: String): Builder = apply { this.firstName = firstName }
-        fun lastName(lastName: String): Builder = apply { this.lastName = lastName }
-        fun avatar(avatar: String): Builder = apply { this.avatar = avatar }
-        fun rating(rating: Int): Builder = apply { this.rating = rating }
-        fun respect(respect: Int): Builder = apply { this.respect = respect }
-        fun lastVisit(lastVisit: Date): Builder = apply { this.lastVisit = lastVisit }
-        fun isOnline(isOnline: Boolean): Builder = apply { this.isOnline = isOnline }
+        fun id(id: String) = apply { this.id = id }
+        fun firstName(firstName: String) = apply { this.firstName = firstName }
+        fun lastName(lastName: String) = apply { this.lastName = lastName }
+        fun avatar(avatar: String) = apply { this.avatar = avatar }
+        fun rating(rating: Int) = apply { this.rating = rating }
+        fun respect(respect: Int) = apply { this.respect = respect }
+        fun lastVisit(lastVisit: Date) = apply { this.lastVisit = lastVisit }
+        fun isOnline(isOnline: Boolean) = apply { this.isOnline = isOnline }
+        fun build() = User(this)
 
-        fun build(): User = User(this)
     }
 }

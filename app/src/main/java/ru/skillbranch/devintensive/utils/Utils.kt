@@ -1,13 +1,8 @@
 package ru.skillbranch.devintensive.utils
 
-/**
- * Created on 2019-06-29.
- *
- * @author Alexandr Shibelev (av.shibelev@gmail.com)
- */
 object Utils {
 
-    private val transliterationMap = mapOf(
+    private val dictionary = mapOf(
         'а' to "a",
         'б' to "b",
         'в' to "v",
@@ -34,7 +29,7 @@ object Utils {
         'ц' to "c",
         'ч' to "ch",
         'ш' to "sh",
-        'щ' to "sh",
+        'щ' to "sh'",
         'ъ' to "",
         'ы' to "i",
         'ь' to "",
@@ -44,52 +39,32 @@ object Utils {
     )
 
     fun parseFullName(fullName: String?): Pair<String?, String?> {
-        val parts = fullName?.run {
-            if (isNullOrBlank()) {
-                null
-            } else {
-                split(" ")
-            }
-        }
+
+        val parts: List<String>? = fullName?.takeIf { it.isNotBlank() }?.split(" ")
+
         val firstName = parts?.getOrNull(0)
         val lastName = parts?.getOrNull(1)
+
         return firstName to lastName
     }
 
-    fun toInitials(fullName: String?, lastName: String? = null): String? {
-        val firstLetter = fullName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
-        val lastLetter = lastName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
-        return "$firstLetter$lastLetter".takeIf { it.isNotBlank() }
-    }
-
-    fun transliteration(payload: String, divider: String = " "): String {
+    fun transliteration(payload: String, divider: String = " "): String? {
         val stringBuilder = StringBuilder()
-        payload.trim().forEach {
+        payload.forEach { c ->
             when {
-                it.isWhitespace() -> stringBuilder.append(divider)
-                it.isUpperCase() -> {
-                    val translate = transliterationMap[it.toLowerCase()]
-                    if (translate == null) {
-                        stringBuilder.append(it)
-                    } else {
-                        if (translate.length > 1) {
-                            stringBuilder.append(translate.substring(0, 1).toUpperCase())
-                                .append(translate.substring(1))
-                        } else {
-                            stringBuilder.append(translate.toUpperCase())
-                        }
-                    }
-                }
-                else -> {
-                    val translate = transliterationMap[it]
-                    if (translate == null) {
-                        stringBuilder.append(it)
-                    } else {
-                        stringBuilder.append(translate)
-                    }
-                }
+                c.isWhitespace() -> stringBuilder.append(divider)
+                c.isUpperCase() -> stringBuilder.append((dictionary[c.toLowerCase()]?.toUpperCase() ?: c))
+                else -> stringBuilder.append(dictionary[c] ?: c)
             }
         }
         return stringBuilder.toString()
     }
+
+    fun toInitials(firstName: String?, lastName: String?): String? {
+        val firstLetter = firstName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
+        val lastLetter = lastName?.takeIf { it.isNotBlank() }?.substring(0, 1)?.toUpperCase() ?: ""
+
+        return "$firstLetter$lastLetter".takeIf { it.isNotBlank() }
+    }
+
 }

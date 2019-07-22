@@ -4,12 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
-/**
- * Created on 2019-06-30.
- *
- * @author Alexandr Shibelev (av.shibelev@gmail.com)
- */
-
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
 const val HOUR = 60 * MINUTE
@@ -29,84 +23,74 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
         TimeUnits.HOUR -> value * HOUR
         TimeUnits.DAY -> value * DAY
     }
-
     this.time = time
     return this
 }
 
-val PLURAL_MINUTE = mapOf(
-    0 to "минута",
-    1 to "минуты",
-    2 to "минут",
-    3 to "минут"
-)
-
-val PLURAL_HOUR = mapOf(
-    0 to "час",
-    1 to "часа",
-    2 to "часов",
-    3 to "часов"
-)
-
-val PLURAL_DAY = mapOf(
-    0 to "день",
-    1 to "дня",
-    2 to "дней",
-    3 to "дней"
-)
-
 fun Date.humanizeDiff(date: Date = Date()): String {
-    val diff = (date.time - time)
-    val value = diff.absoluteValue
+    var differenceDate = date.time - time
+    val value = differenceDate.absoluteValue
 
     val text = when {
         value <= 1 * SECOND -> return "только что"
         value <= 45 * SECOND -> "несколько секунд"
         value <= 75 * SECOND -> "минуту"
-        value <= 45 * MINUTE -> {
-            val minutes = value / MINUTE
-            "$minutes ${PLURAL_MINUTE[minutes.pluralize()]}"
-        }
+        value <= 45 * MINUTE -> TimeUnits.MINUTE.plural(value / MINUTE)
         value <= 75 * MINUTE -> "час"
-        value <= 22 * HOUR -> {
-            val hours = value / HOUR
-            "$hours ${PLURAL_HOUR[hours.pluralize()]}"
-        }
-        value <= 26 * HOUR -> "день"
-        value <= 360 * DAY -> {
-            val days = value / DAY
-            "$days ${PLURAL_DAY[days.pluralize()]}"
-        }
-        else -> return if (diff > 0) "более года назад" else "более чем через год"
-    }
+        value <= 22 * HOUR -> TimeUnits.HOUR.plural(value / HOUR)
+        value <= 360 * DAY -> TimeUnits.DAY.plural(value / DAY)
 
-    return if (diff < 0) {
-        "через $text"
-    } else {
-        "$text назад"
+        else -> return if (differenceDate > 0) "более года назад" else "более чем через год"
     }
-}
-
-// 20 - часов
-// 1 - час
-// 2-4 - часа
-// 5..часов
-fun Long.pluralize(): Int {
-    return if (this in 5..20) {
-        3
-    } else when (this % 10) {
-        0L -> 2
-        1L -> 0
-        in 2..5 -> 1
-        in 5..9 -> 2
-        else -> 3
-    }
+    return if (differenceDate > 0) "$text назад" else "через $text"
 }
 
 enum class TimeUnits {
-    SECOND,
-    MINUTE,
-    HOUR,
-    DAY
-}
+    SECOND {
+        private val secondPlural = listOf("секунда", "секунду", "секунды", "секунд")
+        override fun plural(value: Long): String {
+            return when (value % 10) {
+                0L -> "$value ${secondPlural[3]}"
+                1L -> "$value ${secondPlural[1]}"
+                in 2..4 -> "$value ${secondPlural[2]}"
+                else -> "$value ${secondPlural[3]}"
+            }
+        }
+    },
+    MINUTE {
+        private val minutePlural = listOf("минута", "минуту", "минуты", "минут")
+        override fun plural(value: Long): String {
+            return when (value % 10) {
+                0L -> "$value ${minutePlural[3]}"
+                1L -> "$value ${minutePlural[1]}"
+                in 2..4 -> "$value ${minutePlural[2]}"
+                else -> "$value ${minutePlural[3]}"
+            }
+        }
+    },
+    HOUR {
+        private val hourPlural = listOf("час", "часа", "часов")
+        override fun plural(value: Long): String {
+            return when (value % 10) {
+                0L -> "$value ${hourPlural[2]}"
+                1L -> "$value ${hourPlural[0]}"
+                in 2..4 -> "$value ${hourPlural[1]}"
+                else -> "$value ${hourPlural[2]}"
+            }
+        }
+    },
+    DAY {
+        private val hourPlural = listOf("день", "дня", "дней")
+        override fun plural(value: Long): String {
+            return when (value % 10) {
+                0L -> "$value ${hourPlural[2]}"
+                1L -> "$value ${hourPlural[0]}"
+                in 2..4 -> "$value ${hourPlural[1]}"
+                else -> "$value ${hourPlural[2]}"
+            }
+        }
+    };
 
+    abstract fun plural(value: Long): String
+
+}
